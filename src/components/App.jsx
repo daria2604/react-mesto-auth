@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import api from "../utils/Api";
 import Footer from "./Footer";
@@ -190,7 +190,7 @@ function App() {
               />
             }/>
             <Route path="/" element={
-              <ProtectedRoute path="/" component={Footer}/>
+              <ProtectedRoute path="/" component={Footer} isLoggedIn={isLoggedIn}/>
             }/>
             <Route path="/sign-in" element={ <Login /> } />
             <Route path="/sign-up" element={ <Register /> } />

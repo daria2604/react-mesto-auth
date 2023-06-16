@@ -14,8 +14,8 @@ function Header() {
           className="header__logo"
         />
       </a>
-      {location.pathname !== '/sign-in' && <p className="header__nav"><Link to="/sign-up" className="header__link">Войти</Link></p>}
-      {location.pathname !== '/sign-up' && <p className="header__nav"><Link to="/sign-in" className="header__link">Регистрация</Link></p>}
+      {location.pathname !== '/sign-in' && <p className="header__nav"><Link to="/sign-in" className="header__link">Войти</Link></p>}
+      {location.pathname !== '/sign-up' && <p className="header__nav"><Link to="/sign-up" className="header__link">Регистрация</Link></p>}
     </header>
   )
 };
