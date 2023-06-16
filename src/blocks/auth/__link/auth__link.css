@@ -2,3 +2,8 @@
   text-decoration: none;
   color: #FFF;
 }
+
+.auth__link:hover {
+  opacity: .6;
+  transition: all .2s ease-in-out;
+}
