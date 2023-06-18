@@ -16,11 +16,13 @@ function InfoTooltip({ isOpen, onClose, onOverlay, isSuccess }) {
       <div className="popup__info">
         {isSuccess
         ? <img src={successIcon} alt="Черный крест в черном круге" className="popup__info-icon" />
-        : <img src={failureIcon} alt="Красный крест в красном круге" className="popup__info-icon" /> }
+        : <img src={failureIcon} alt="Красный крест в красном круге" className="popup__info-icon" />
+        }
         <div className="popup__info-container">
           {isSuccess
           ? <p className="popup__info-text">Вы успешно зарегистрировались!</p>
-          : <p className="popup__info-text">Что-то пошло не так! Попробуйте ещё раз.</p>}
+          : <p className="popup__info-text">Что-то пошло не так! Попробуйте ещё раз.</p>
+          }
         </div>
       </div>
     </div>
