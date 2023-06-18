@@ -13,12 +13,10 @@ function Register(props) {
       button="Зарегистрироваться"
       onSubmit={handleSubmit}
     >
-      <p className="auth__caption">
-        Уже зарегистрированы?
-        <Link to="/sign-in" className="auth__link">
-          Войти
-        </Link>
-      </p>
+      <div className="auth__signin">
+        <p className="auth__caption">Уже зарегистрированы?</p>
+        <Link to="/sign-in" className="auth__link"> Войти</Link>
+      </div>
     </AuthForm>
   );
 }

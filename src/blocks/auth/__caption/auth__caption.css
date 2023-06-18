@@ -1,7 +1,4 @@
 .auth__caption {
-  color: #FFF;
-  font-weight: 400;
-  font-size: 14px;
-  margin: 15px auto 0 auto;
-  text-align: center;
+  display: inline-block;
+  margin: 0;
 }
