@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import api from "../utils/Api";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -13,6 +13,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+import * as auth from "../utils/Auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -168,15 +169,26 @@ function App() {
       });
   }
 
+  function handleRegisterSubmit(email, password) {
+    auth.register(email, password)
+    .then((data) => {
+      console.log(data)
+
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
   return (
     <div className="root">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
           <Routes>
-            <Route path="/" element={
+            <Route path="/main" element={
               <ProtectedRoute
-                path="/"
+                path="/main"
                 cards={cards}
                 onEditProfile={handleEditProfileClick}
                 onEditAvatar={handleEditAvatarClick}
@@ -193,19 +205,8 @@ function App() {
               <ProtectedRoute path="/" component={Footer} isLoggedIn={isLoggedIn}/>
             }/>
             <Route path="/sign-in" element={ <Login /> } />
-            <Route path="/sign-up" element={ <Register /> } />
+            <Route path="/sign-up" element={ <Register onRegister={handleRegisterSubmit} /> } />
           </Routes>
-          {/* <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onEditAvatar={handleEditAvatarClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardClick={setSelectedCard}
-            onCardLike={handleCardLike}
-            onCardDelete={setDeletedCard}
-            onConfirmationPopup={setIsPopupWithConfirmationOpen}
-          /> */}
-          {/* <Footer /> */}
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
