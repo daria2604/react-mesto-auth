@@ -9,6 +9,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PopupWithConfirmation from "./PopupWithConfirmation";
+import InfoTooltip from "./InfoTooltip";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Login from "./Login";
 import Register from "./Register";
@@ -20,12 +21,14 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isPopupWithConfirmationOpen, setIsPopupWithConfirmationOpen] = React.useState(false);
+  const [isInfotooltipOpen, setIsInfoTooltipOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
+  const [isSuccess, setIsSuccess] = React.useState(false);
 
   React.useEffect(() => {
     api
@@ -77,6 +80,7 @@ function App() {
     setAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsPopupWithConfirmationOpen(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
     setDeletedCard({});
   }
@@ -172,8 +176,8 @@ function App() {
   function handleRegisterSubmit(email, password) {
     auth.register(email, password)
     .then((data) => {
-      console.log(data)
-
+      setIsSuccess(true)
+      setIsInfoTooltipOpen(true)
     })
     .catch((err) => {
       console.log(err)
@@ -239,6 +243,12 @@ function App() {
             card={selectedCard}
             onClose={closeAllPopups}
             onOverlay={closeOnOverlay}
+          />
+          <InfoTooltip
+            isOpen={isInfotooltipOpen}
+            onClose={closeAllPopups}
+            onOverlay={closeOnOverlay}
+            isSuccess={isSuccess}
           />
         </CurrentUserContext.Provider>
       </div>
