@@ -25,6 +25,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
+  const [userData, setUserData] = React.useState({})
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
@@ -39,7 +40,8 @@ function App() {
         return
       }
       setLoggedIn(true)
-      navigate('/')
+      setUserData(data)
+      navigate('/', {replace: true})
     })
     .catch((err) => {
       setLoggedIn(false)
@@ -226,13 +228,11 @@ function App() {
     })
   }
 
-
-
   return (
     <div className="root">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-          <Header />
+          <Header userData={userData} />
           <Routes>
             <Route path="/" element={
               <ProtectedRoute
