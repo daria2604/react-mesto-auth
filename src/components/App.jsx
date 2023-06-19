@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import api from "../utils/Api";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -29,6 +29,7 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     api
@@ -175,12 +176,33 @@ function App() {
 
   function handleRegisterSubmit(email, password) {
     auth.register(email, password)
-    .then((data) => {
+    .then(() => {
       setIsSuccess(true)
       setIsInfoTooltipOpen(true)
+      navigate('/sign-in', {replace: true})
     })
     .catch((err) => {
-      console.log(err)
+      setIsSuccess(false)
+      setIsInfoTooltipOpen(true)
+      console.log(err + ' - некорректно заполнено одно из полей')
+    })
+  }
+
+  function handleLoginSubmit(email, password) {
+    auth.authorize(email, password)
+    .then((data) => {
+      localStorage.setItem('token', data.token)
+      setLoggedIn(true)
+      navigate('/', {replace: true})
+     })
+    .catch((err) => {
+      setIsSuccess(false)
+      setIsInfoTooltipOpen(true)
+      if (err.status === 400) {
+        console.log(err + ' - не передано одно из полей')
+      } else if (err.status === 401) {
+        console.log(err + ' - пользователь с таким email не найден')
+      }
     })
   }
 
@@ -190,9 +212,8 @@ function App() {
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
           <Routes>
-            <Route path="/main" element={
+            <Route path="/" element={
               <ProtectedRoute
-                path="/main"
                 cards={cards}
                 onEditProfile={handleEditProfileClick}
                 onEditAvatar={handleEditAvatarClick}
@@ -201,16 +222,14 @@ function App() {
                 onCardLike={handleCardLike}
                 onCardDelete={setDeletedCard}
                 onConfirmationPopup={setIsPopupWithConfirmationOpen}
-                component={Main}
+                element={Main}
                 isLoggedIn={isLoggedIn}
               />
             }/>
-            <Route path="/" element={
-              <ProtectedRoute path="/" component={Footer} isLoggedIn={isLoggedIn}/>
-            }/>
-            <Route path="/sign-in" element={ <Login /> } />
+            <Route path="/sign-in" element={ <Login onLogin={handleLoginSubmit}/> } />
             <Route path="/sign-up" element={ <Register onRegister={handleRegisterSubmit} /> } />
           </Routes>
+          {isLoggedIn && <Footer />}
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
