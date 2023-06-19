@@ -27,6 +27,7 @@
 @import url(./blocks/header/__nav/header__nav.css);
 @import url(./blocks/header/__nav-link/header__nav-link.css);
 @import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__nav-button/header__nav-button.css);
 /* auth */
 @import url(./blocks/auth/auth.css);
 @import url(./blocks/auth/__form/auth__form.css);

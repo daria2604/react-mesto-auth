@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/Api";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -31,6 +31,7 @@ function App() {
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const checkToken = () => {
     const token = localStorage.getItem('token')
@@ -41,11 +42,11 @@ function App() {
       }
       setLoggedIn(true)
       setUserData(data)
-      navigate('/', {replace: true})
+      navigate(location.pathname)
     })
-    .catch((err) => {
+    .catch(() => {
       setLoggedIn(false)
-      console.log(err)
+      setUserData({})
     })
   }
 
@@ -228,11 +229,19 @@ function App() {
     })
   }
 
+  function handleSignOut() {
+    localStorage.removeItem('token')
+    navigate('/sign-in')
+  }
+
   return (
     <div className="root">
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
-          <Header userData={userData} />
+          <Header
+            userData={userData}
+            onSignOut={handleSignOut}
+          />
           <Routes>
             <Route path="/" element={
               <ProtectedRoute
