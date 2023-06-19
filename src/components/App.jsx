@@ -31,6 +31,22 @@ function App() {
   const [isSuccess, setIsSuccess] = React.useState(false);
   const navigate = useNavigate();
 
+  const checkToken = () => {
+    const token = localStorage.getItem('token')
+    auth.getContent(token)
+    .then((data) => {
+      if(!data) {
+        return
+      }
+      setLoggedIn(true)
+      navigate('/')
+    })
+    .catch((err) => {
+      setLoggedIn(false)
+      console.log(err)
+    })
+  }
+
   React.useEffect(() => {
     api
       .getUserInfo()
@@ -55,14 +71,18 @@ function App() {
 
   React.useEffect(() => {
     const handleEsc = (evt) => {
-      evt.key === "Escape" && closeAllPopups();
+      evt.key === 'Escape' && closeAllPopups();
     };
-    document.addEventListener("keydown", handleEsc);
+    document.addEventListener('keydown', handleEsc);
 
     return () => {
-      document.removeEventListener("keydown", handleEsc);
+      document.removeEventListener('keydown', handleEsc);
     };
   }, []);
+
+  React.useEffect(() => {
+    checkToken()
+  }, [])
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -205,6 +225,8 @@ function App() {
       }
     })
   }
+
+
 
   return (
     <div className="root">
