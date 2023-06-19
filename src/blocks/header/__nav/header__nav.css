@@ -1,9 +1,5 @@
 .header__nav {
-  margin: 0;
-  float: right;
-}
-
-.header__nav:hover {
-  opacity: .6;
-  transition: all .2s ease-in-out;
+  display: flex;
+  column-gap: 24px;
+  align-items: center;
 }
