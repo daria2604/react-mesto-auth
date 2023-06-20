@@ -8,3 +8,9 @@
   opacity: .6;
   transition: all .2s ease-in-out;
 }
+
+@media (max-width: 420px) {
+  .header__nav-link {
+    font-size: 14px;
+  }
+}

@@ -5,8 +5,18 @@
   padding-bottom: 41px;
 }
 
-@media (max-width: 585px) {
+@media (max-width: 880px) {
+  .header {
+    padding-left: 72px;
+    padding-right: 72px;
+  }
+}
+
+
+@media (max-width: 420px) {
   .header {
     padding-bottom: 32px;
+    padding-left: 30px;
+    padding-right: 30px;
   }
 }

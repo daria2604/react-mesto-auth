@@ -12,3 +12,9 @@
 .auth__input:first-of-type {
   margin-bottom: 30px;
 }
+
+@media (max-width: 420px) {
+  .auth__input {
+    width: 260px;
+  }
+}

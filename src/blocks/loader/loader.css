@@ -26,3 +26,11 @@
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 420px) {
+  .loader:after {
+    width: 64px;
+    height: 64px;
+    margin: 20% 40%;
+  }
+}

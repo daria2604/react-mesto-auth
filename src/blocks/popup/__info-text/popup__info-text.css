@@ -5,3 +5,9 @@
   margin: 0;
   text-align: center;
 }
+
+@media (max-width: 585px) {
+  .popup__info-text {
+    font-size: 20px;
+  }
+}
