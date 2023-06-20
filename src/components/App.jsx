@@ -214,7 +214,7 @@ function App() {
 
   function handleLoginSubmit(email, password) {
     setIsLoading(true)
-    setLoggedIn(null)
+    setLoggedIn(false)
     auth.authorize(email, password)
     .then((data) => {
       localStorage.setItem('token', data.token)
