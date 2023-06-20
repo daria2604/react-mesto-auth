@@ -2,6 +2,7 @@
 @import url(./vendor/fonts/fonts.css);
 @import url(./blocks/page/page.css);
 @import url(./blocks/root/root.css);
+@import url(./blocks/loader/loader.css);
 /* popup */
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/popup/_opened/popup_opened.css);

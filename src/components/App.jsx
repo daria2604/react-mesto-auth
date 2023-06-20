@@ -15,6 +15,7 @@ import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import * as auth from "../utils/Auth";
+import Loader from "./Loader";
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
   const [email, setEmail] = React.useState('')
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isLoggedIn, setLoggedIn] = React.useState(false);
+  const [isLoggedIn, setLoggedIn] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const navigate = useNavigate();
 
@@ -212,13 +213,15 @@ function App() {
   }
 
   function handleLoginSubmit(email, password) {
+    setIsLoading(true)
+    setLoggedIn(null)
     auth.authorize(email, password)
     .then((data) => {
       localStorage.setItem('token', data.token)
       setLoggedIn(true)
       setEmail(email)
       navigate('/', {replace: true})
-     })
+    })
     .catch((err) => {
       setIsSuccess(false)
       setIsInfoTooltipOpen(true)
@@ -227,6 +230,9 @@ function App() {
       } else if (err.status === 401) {
         console.log('401 - пользователь с таким email не найден')
       }
+    })
+    .finally(() =>{
+      setIsLoading(false)
     })
   }
 
@@ -245,6 +251,7 @@ function App() {
             email={email}
             onSignOut={handleSignOut}
           />
+          {isLoggedIn === null && <Loader/>}
           <Routes>
             <Route path="/" element={
               <ProtectedRoute
