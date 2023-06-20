@@ -214,7 +214,7 @@ function App() {
 
   function handleLoginSubmit(email, password) {
     setIsLoading(true)
-    setLoggedIn(false)
+    setLoggedIn(null)
     auth.authorize(email, password)
     .then((data) => {
       localStorage.setItem('token', data.token)
@@ -224,6 +224,7 @@ function App() {
     })
     .catch((err) => {
       setIsSuccess(false)
+      setLoggedIn(false)
       setIsInfoTooltipOpen(true)
       if (err.status === 400) {
         console.log('400 - не передано одно из полей')
