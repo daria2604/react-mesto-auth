@@ -1,9 +1,9 @@
 import React from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import api from "../utils/Api";
-import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
+import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -16,6 +16,7 @@ import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import * as auth from "../utils/Auth";
 
+
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
@@ -25,30 +26,12 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [userData, setUserData] = React.useState({})
+  const [email, setEmail] = React.useState('')
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const checkToken = () => {
-    const token = localStorage.getItem('token')
-    auth.getContent(token)
-    .then((data) => {
-      if(!data) {
-        return
-      }
-      setLoggedIn(true)
-      setUserData(data)
-      navigate(location.pathname)
-    })
-    .catch(() => {
-      setLoggedIn(false)
-      setUserData({})
-    })
-  }
 
   React.useEffect(() => {
     api
@@ -86,6 +69,23 @@ function App() {
   React.useEffect(() => {
     checkToken()
   }, [])
+
+  function checkToken() {
+    const token = localStorage.getItem('token')
+    auth.getContent(token)
+    .then((data) => {
+      if(!data) {
+        return
+      }
+      setLoggedIn(true)
+      setEmail(data.data.email)
+      navigate('/')
+    })
+    .catch(() => {
+      setLoggedIn(false)
+      setEmail({})
+    })
+  }
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -207,7 +207,7 @@ function App() {
     .catch((err) => {
       setIsSuccess(false)
       setIsInfoTooltipOpen(true)
-      console.log(err + ' - некорректно заполнено одно из полей')
+      console.log('400 - некорректно заполнено одно из полей')
     })
   }
 
@@ -216,22 +216,25 @@ function App() {
     .then((data) => {
       localStorage.setItem('token', data.token)
       setLoggedIn(true)
+      setEmail(email)
       navigate('/', {replace: true})
      })
     .catch((err) => {
       setIsSuccess(false)
       setIsInfoTooltipOpen(true)
       if (err.status === 400) {
-        console.log(err + ' - не передано одно из полей')
+        console.log('400 - не передано одно из полей')
       } else if (err.status === 401) {
-        console.log(err + ' - пользователь с таким email не найден')
+        console.log('401 - пользователь с таким email не найден')
       }
     })
   }
 
   function handleSignOut() {
     localStorage.removeItem('token')
-    navigate('/sign-in')
+    setLoggedIn(false)
+    setEmail('')
+    navigate('/sign-in', {replace: true})
   }
 
   return (
@@ -239,7 +242,7 @@ function App() {
       <div className="page">
         <CurrentUserContext.Provider value={currentUser}>
           <Header
-            userData={userData}
+            email={email}
             onSignOut={handleSignOut}
           />
           <Routes>

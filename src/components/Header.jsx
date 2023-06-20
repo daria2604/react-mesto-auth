@@ -2,7 +2,7 @@ import React from "react";
 import headerLogo from "../images/logo.svg";
 import { Link, useLocation } from "react-router-dom";
 
-function Header({ userData, onSignOut }) {
+function Header({ email, onSignOut }) {
   const location = useLocation();
 
   return (
@@ -26,7 +26,7 @@ function Header({ userData, onSignOut }) {
       )}
       {location.pathname === "/" && (
         <div className="header__nav">
-          <p className="header__email">{userData.data?.email}</p>
+          <p className="header__email">{email}</p>
           <button
             type="button"
             className="header__nav-link header__nav-button"
