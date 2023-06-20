@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import api from "../utils/Api";
 import Header from "./Header";
 import Main from "./Main";
