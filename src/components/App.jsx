@@ -23,7 +23,8 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isPopupWithConfirmationOpen, setIsPopupWithConfirmationOpen] = React.useState(false);
-  const [isInfotooltipOpen, setIsInfoTooltipOpen] = React.useState(false)
+  const [isInfotooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -244,6 +245,14 @@ function App() {
     navigate('/sign-in', {replace: true})
   }
 
+  function handleMobileMenuClick() {
+    setIsMobileMenuOpen(true)
+  }
+
+  function handleMobileMenuCloseClick() {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
     <div className="root">
       <div className="page">
@@ -251,6 +260,9 @@ function App() {
           <Header
             email={email}
             onSignOut={handleSignOut}
+            isOpen={isMobileMenuOpen}
+            onMobileMenuClick={handleMobileMenuClick}
+            onClose={handleMobileMenuCloseClick}
           />
           {isLoggedIn === null && <Loader/>}
           <Routes>
