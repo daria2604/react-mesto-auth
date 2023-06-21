@@ -28,6 +28,10 @@
 @import url(./blocks/header/__nav-link/header__nav-link.css);
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__nav-button/header__nav-button.css);
+@import url(./blocks/mobile-menu/mobile-menu.css);
+@import url(./blocks/mobile-menu/__email/mobile-menu__email.css);
+@import url(./blocks/mobile-menu/__signout/mobile-menu__signout.css);
+@import url(./blocks/mobile-menu/__button/mobile-menu__button.css);
 /* auth */
 @import url(./blocks/auth/auth.css);
 @import url(./blocks/auth/__form/auth__form.css);

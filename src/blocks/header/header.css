@@ -12,6 +12,12 @@
   }
 }
 
+@media (max-width: 534px) {
+  .header {
+    align-items: baseline;
+    padding-bottom: 31px;
+  }
+}
 
 @media (max-width: 420px) {
   .header {
