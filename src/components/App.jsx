@@ -29,11 +29,12 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [email, setEmail] = React.useState('')
+  const [email, setEmail] = React.useState('');
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
+  const isPopupOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isPopupWithConfirmationOpen || isInfotooltipOpen || selectedCard.link;
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -59,15 +60,18 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    const handleEsc = (evt) => {
-      evt.key === 'Escape' && closeAllPopups();
-    };
-    document.addEventListener('keydown', handleEsc);
-
-    return () => {
-      document.removeEventListener('keydown', handleEsc);
-    };
-  }, []);
+    function closeByEscape(evt) {
+      if(evt.key === 'Escape') {
+        closeAllPopups()
+      }
+    }
+    if(isPopupOpen) {
+      document.addEventListener('keydown', closeByEscape)
+      return () => {
+        document.removeEventListener('keydown', closeByEscape)
+      }
+    }
+  }, [isPopupOpen])
 
   React.useEffect(() => {
     checkToken()
