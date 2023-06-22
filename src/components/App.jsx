@@ -24,7 +24,8 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isPopupWithConfirmationOpen, setIsPopupWithConfirmationOpen] = React.useState(false);
   const [isInfotooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
@@ -242,6 +243,7 @@ function App() {
     localStorage.removeItem('token')
     setLoggedIn(false)
     setEmail('')
+    setIsMobileMenuOpen(false)
     navigate('/sign-in', {replace: true})
   }
 
@@ -263,6 +265,7 @@ function App() {
             isOpen={isMobileMenuOpen}
             onMobileMenuClick={handleMobileMenuClick}
             onClose={handleMobileMenuCloseClick}
+            isMobile={() => {setIsMobile(true)}}
           />
           {isLoggedIn === null && <Loader/>}
           <Routes>
