@@ -127,9 +127,7 @@ function App() {
             state.map((item) => (item._id === card._id ? newCard : item))
           );
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(console.error);
     } else {
       api
         .unlikeCard(card._id)
@@ -138,9 +136,7 @@ function App() {
             state.map((item) => (item._id === card._id ? newCard : item))
           );
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch(console.error);
     }
   }
 
@@ -151,9 +147,7 @@ function App() {
         setCards((state) => state.filter((item) => item._id !== card._id));
         closeAllPopups();
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.error);
   }
 
   function handleUpdateUser(userInfo) {
@@ -164,9 +158,7 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch(console.error)
       .finally(() => {
         setIsLoading(false);
       });
@@ -179,9 +171,7 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.error);
   }
 
   function handleAddPlaceSubmit(newCard) {
@@ -192,9 +182,7 @@ function App() {
         setCards([card, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch(console.error)
       .finally(() => {
         setIsLoading(false);
       });
