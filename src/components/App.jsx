@@ -196,13 +196,14 @@ function App() {
     auth.register(email, password)
     .then(() => {
       setIsSuccess(true)
-      setIsInfoTooltipOpen(true)
       navigate('/sign-in', {replace: true})
     })
     .catch((err) => {
       setIsSuccess(false)
-      setIsInfoTooltipOpen(true)
       console.log('400 - некорректно заполнено одно из полей')
+    })
+    .finally(() => {
+      setIsInfoTooltipOpen(true)
     })
   }
 
