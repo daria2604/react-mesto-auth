@@ -15,26 +15,28 @@ class Api {
     return Promise.reject(`Ошибка: ${res.status}`)
   }
 
+  #request(endpoint, options) {
+    return fetch(this.#baseUrl + endpoint, options).then(this.#checkResponse)
+  }
+
   getInitialInfo() {
     return Promise.all([this.getUserInfo(), this.getInitialCards()])
   }
 
   getInitialCards() {
-    return fetch(this.#baseUrl + '/cards', {
+    return this.#request('/cards', {
       headers: this.#headers
     })
-    .then(this.#checkResponse)
   }
 
   getUserInfo() {
-    return fetch(this.#baseUrl + '/users/me', {
+    return this.#request('/users/me', {
       headers: this.#headers
     })
-    .then(this.#checkResponse)
   }
 
   updateUserInfo({ name, about }) {
-    return fetch(this.#baseUrl + '/users/me', {
+    return this.#request('/users/me', {
       method: 'PATCH',
       headers: this.#headers,
       body: JSON.stringify({
@@ -42,11 +44,10 @@ class Api {
         about: about
       })
     })
-    .then(this.#checkResponse)
   }
 
   addCard({ title, link }) {
-    return fetch(this.#baseUrl + '/cards', {
+    return this.#request('/cards', {
       method: 'POST',
       headers: this.#headers,
       body: JSON.stringify({
@@ -54,42 +55,37 @@ class Api {
         link: link
       })
     })
-    .then(this.#checkResponse)
   }
 
   updateAvatar(data) {
-    return fetch(this.#baseUrl + '/users/me/avatar', {
+    return this.#request('/users/me/avatar', {
       method: 'PATCH',
       headers: this.#headers,
       body: JSON.stringify({
         avatar: data.avatar
       })
     })
-    .then(this.#checkResponse)
   }
 
   deleteCard(cardId) {
-    return fetch(this.#baseUrl + '/cards/' + cardId, {
+    return this.#request('/cards/' + cardId, {
       method: 'DELETE',
       headers: this.#headers
     })
-    .then(this.#checkResponse)
   }
 
   likeCard(cardId) {
-    return fetch(this.#baseUrl + '/cards/' + cardId + '/likes', {
+    return this.#request('/cards/' + cardId + '/likes', {
       method: 'PUT',
       headers: this.#headers
     })
-    .then(this.#checkResponse)
   }
 
   unlikeCard(cardId) {
-    return fetch(this.#baseUrl + '/cards/' + cardId + '/likes', {
+    return this.#request('/cards/' + cardId + '/likes', {
       method: 'DELETE',
       headers: this.#headers
     })
-    .then(this.#checkResponse)
   }
 }
 
