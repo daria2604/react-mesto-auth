@@ -1,7 +1,7 @@
 import React from "react"
 import PopupWithForm from "./PopupWithForm";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onOverlay, onLoading }) {
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading }) {
   const avatarRef = React.useRef()
 
   React.useEffect(() => {

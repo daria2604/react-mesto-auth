@@ -1,7 +1,7 @@
 import React from "react"
 import PopupWithForm from "./PopupWithForm";
 
-function PopupWithConfirmation({ card, isOpen, onClose, onOverlay, onConfirm  }) {
+function PopupWithConfirmation({ card, isOpen, onClose, onConfirm  }) {
   function handleSubmit(evt) {
     evt.preventDefault()
     onConfirm(card)
