@@ -33,13 +33,6 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const isPopupOpen =
-    isEditAvatarPopupOpen ||
-    isEditProfilePopupOpen ||
-    isAddPlacePopupOpen ||
-    isPopupWithConfirmationOpen ||
-    isInfotooltipOpen ||
-    selectedCard.link;
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -63,20 +56,6 @@ function App() {
         console.log(err);
       });
   }, []);
-
-  React.useEffect(() => {
-    function closeByEscape(evt) {
-      if (evt.key === "Escape") {
-        closeAllPopups();
-      }
-    }
-    if (isPopupOpen) {
-      document.addEventListener("keydown", closeByEscape);
-      return () => {
-        document.removeEventListener("keydown", closeByEscape);
-      };
-    }
-  }, [isPopupOpen]);
 
   React.useEffect(() => {
     checkToken();
@@ -120,10 +99,6 @@ function App() {
     setIsInfoTooltipOpen(false);
     setSelectedCard({});
     setDeletedCard({});
-  }
-
-  function closeOnOverlay(evt) {
-    evt.currentTarget === evt.target && closeAllPopups();
   }
 
   function handleCardLike(card) {
@@ -298,39 +273,33 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
-            onOverlay={closeOnOverlay}
             onLoading={isLoading}
           />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
-            onOverlay={closeOnOverlay}
             onLoading={isLoading}
           />
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
-            onOverlay={closeOnOverlay}
             onLoading={isLoading}
           />
           <PopupWithConfirmation
             card={deletedCard}
             isOpen={isPopupWithConfirmationOpen}
             onClose={closeAllPopups}
-            onOverlay={closeOnOverlay}
             onConfirm={handleCardDelete}
           />
           <ImagePopup
             card={selectedCard}
             onClose={closeAllPopups}
-            onOverlay={closeOnOverlay}
           />
           <InfoTooltip
             isOpen={isInfotooltipOpen}
             onClose={closeAllPopups}
-            onOverlay={closeOnOverlay}
             isSuccess={isSuccess}
           />
         </CurrentUserContext.Provider>

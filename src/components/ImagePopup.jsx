@@ -1,28 +1,15 @@
-import React from "react"
+import React from "react";
+import Popup from "./Popup";
 
-function ImagePopup({ card, onClose, onOverlay }) {
+function ImagePopup({ card, onClose }) {
   return (
-    <div
-      className={`popup popup_type_image ${card.link ? 'popup_opened' : ''}`}
-      onMouseDown={onOverlay}
-    >
-    <div className="popup__container">
-      <button
-        className="button button_action_close"
-        type="button"
-        onClick={onClose}
-      />
+    <Popup name={"image"} isOpen={card.link} onClose={onClose}>
       <div className="popup__wrap">
-        <img
-          className="popup__image"
-          alt={card.name}
-          src={card.link}
-        />
+        <img className="popup__image" alt={card.name} src={card.link} />
         <p className="popup__caption">{card.name}</p>
       </div>
-    </div>
-    </div>
-  )
-};
+    </Popup>
+  );
+}
 
 export default ImagePopup;

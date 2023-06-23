@@ -14,7 +14,6 @@ function PopupWithConfirmation({ card, isOpen, onClose, onOverlay, onConfirm  })
       button="Да"
       isOpen={isOpen}
       onClose={onClose}
-      onOverlay={onOverlay}
       onSubmit={handleSubmit}
     />
   )

@@ -32,7 +32,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onOverlay, onLoading 
       button={onLoading ? `Сохранение...` : `Сохранить`}
       isOpen={isOpen}
       onClose={onClose}
-      onOverlay={onOverlay}
       onSubmit={handleSubmit}
     >
       <input
