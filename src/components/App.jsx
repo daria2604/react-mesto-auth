@@ -17,7 +17,6 @@ import ProtectedRoute from "./ProtectedRoute";
 import * as auth from "../utils/Auth";
 import Loader from "./Loader";
 
-
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
@@ -29,12 +28,18 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [deletedCard, setDeletedCard] = React.useState({});
   const [currentUser, setCurrentUser] = React.useState({});
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
   const [cards, setCards] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setLoggedIn] = React.useState(null);
   const [isSuccess, setIsSuccess] = React.useState(false);
-  const isPopupOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || isPopupWithConfirmationOpen || isInfotooltipOpen || selectedCard.link;
+  const isPopupOpen =
+    isEditAvatarPopupOpen ||
+    isEditProfilePopupOpen ||
+    isAddPlacePopupOpen ||
+    isPopupWithConfirmationOpen ||
+    isInfotooltipOpen ||
+    selectedCard.link;
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -61,37 +66,38 @@ function App() {
 
   React.useEffect(() => {
     function closeByEscape(evt) {
-      if(evt.key === 'Escape') {
-        closeAllPopups()
+      if (evt.key === "Escape") {
+        closeAllPopups();
       }
     }
-    if(isPopupOpen) {
-      document.addEventListener('keydown', closeByEscape)
+    if (isPopupOpen) {
+      document.addEventListener("keydown", closeByEscape);
       return () => {
-        document.removeEventListener('keydown', closeByEscape)
-      }
+        document.removeEventListener("keydown", closeByEscape);
+      };
     }
-  }, [isPopupOpen])
+  }, [isPopupOpen]);
 
   React.useEffect(() => {
-    checkToken()
-  }, [])
+    checkToken();
+  }, []);
 
   function checkToken() {
-    const token = localStorage.getItem('token')
-    auth.getContent(token)
-    .then((data) => {
-      if(!data) {
-        return
-      }
-      setLoggedIn(true)
-      setEmail(data.data.email)
-      navigate('/')
-    })
-    .catch(() => {
-      setLoggedIn(false)
-      setEmail({})
-    })
+    const token = localStorage.getItem("token");
+    auth
+      .getContent(token)
+      .then((data) => {
+        if (!data) {
+          return;
+        }
+        setLoggedIn(true);
+        setEmail(data.data.email);
+        navigate("/");
+      })
+      .catch(() => {
+        setLoggedIn(false);
+        setEmail({});
+      });
   }
 
   function handleEditProfileClick() {
@@ -154,98 +160,95 @@ function App() {
       .catch(console.error);
   }
 
-  function handleUpdateUser(userInfo) {
+  function handleSubmit(request) {
     setIsLoading(true);
-    api
-      .updateUserInfo(userInfo)
-      .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
-      })
+    request()
+      .then(closeAllPopups)
       .catch(console.error)
       .finally(() => {
         setIsLoading(false);
       });
+  }
+
+  function handleUpdateUser(userInfo) {
+    function makeRequest() {
+      return api.updateUserInfo(userInfo).then(setCurrentUser);
+    }
+
+    handleSubmit(makeRequest);
   }
 
   function handleUpdateAvatar(newAvatar) {
-    api
-      .updateAvatar(newAvatar)
-      .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
-      })
-      .catch(console.error);
+    function makeRequest() {
+      return api.updateAvatar(newAvatar).then(setCurrentUser);
+    }
+
+    handleSubmit(makeRequest);
   }
 
   function handleAddPlaceSubmit(newCard) {
-    setIsLoading(true);
-    api
-      .addCard(newCard)
-      .then((card) => {
-        setCards([card, ...cards]);
-        closeAllPopups();
+    function makeRequest() {
+      return api.addCard(newCard).then((card) => setCards([card, ...cards]));
+    }
+    handleSubmit(makeRequest);
+  }
+
+  function handleRegisterSubmit(email, password) {
+    auth
+      .register(email, password)
+      .then(() => {
+        setIsSuccess(true);
+        navigate("/sign-in", { replace: true });
       })
-      .catch(console.error)
+      .catch((err) => {
+        setIsSuccess(false);
+        console.log("400 - некорректно заполнено одно из полей");
+      })
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
+      });
+  }
+
+  function handleLoginSubmit(email, password) {
+    setIsLoading(true);
+    setLoggedIn(null);
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        setLoggedIn(true);
+        setEmail(email);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        setLoggedIn(false);
+        setIsInfoTooltipOpen(true);
+        if (err.status === 400) {
+          console.log("400 - не передано одно из полей");
+        } else if (err.status === 401) {
+          console.log("401 - пользователь с таким email не найден");
+        }
+      })
       .finally(() => {
         setIsLoading(false);
       });
   }
 
-  function handleRegisterSubmit(email, password) {
-    auth.register(email, password)
-    .then(() => {
-      setIsSuccess(true)
-      navigate('/sign-in', {replace: true})
-    })
-    .catch((err) => {
-      setIsSuccess(false)
-      console.log('400 - некорректно заполнено одно из полей')
-    })
-    .finally(() => {
-      setIsInfoTooltipOpen(true)
-    })
-  }
-
-  function handleLoginSubmit(email, password) {
-    setIsLoading(true)
-    setLoggedIn(null)
-    auth.authorize(email, password)
-    .then((data) => {
-      localStorage.setItem('token', data.token)
-      setLoggedIn(true)
-      setEmail(email)
-      navigate('/', {replace: true})
-    })
-    .catch((err) => {
-      setIsSuccess(false)
-      setLoggedIn(false)
-      setIsInfoTooltipOpen(true)
-      if (err.status === 400) {
-        console.log('400 - не передано одно из полей')
-      } else if (err.status === 401) {
-        console.log('401 - пользователь с таким email не найден')
-      }
-    })
-    .finally(() =>{
-      setIsLoading(false)
-    })
-  }
-
   function handleSignOut() {
-    localStorage.removeItem('token')
-    setLoggedIn(false)
-    setEmail('')
-    setIsMobileMenuOpen(false)
-    navigate('/sign-in', {replace: true})
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    setEmail("");
+    setIsMobileMenuOpen(false);
+    navigate("/sign-in", { replace: true });
   }
 
   function handleMobileMenuClick() {
-    setIsMobileMenuOpen(true)
+    setIsMobileMenuOpen(true);
   }
 
   function handleMobileMenuCloseClick() {
-    setIsMobileMenuOpen(false)
+    setIsMobileMenuOpen(false);
   }
 
   return (
@@ -258,26 +261,37 @@ function App() {
             isOpen={isMobileMenuOpen}
             onMobileMenuClick={handleMobileMenuClick}
             onClose={handleMobileMenuCloseClick}
-            isMobile={() => {setIsMobile(true)}}
+            isMobile={() => {
+              setIsMobile(true);
+            }}
           />
-          {isLoggedIn === null && <Loader/>}
+          {isLoggedIn === null && <Loader />}
           <Routes>
-            <Route path="/" element={
-              <ProtectedRoute
-                cards={cards}
-                onEditProfile={handleEditProfileClick}
-                onEditAvatar={handleEditAvatarClick}
-                onAddPlace={handleAddPlaceClick}
-                onCardClick={setSelectedCard}
-                onCardLike={handleCardLike}
-                onCardDelete={setDeletedCard}
-                onConfirmationPopup={setIsPopupWithConfirmationOpen}
-                element={Main}
-                isLoggedIn={isLoggedIn}
-              />
-            }/>
-            <Route path="/sign-in" element={ <Login onLogin={handleLoginSubmit}/> } />
-            <Route path="/sign-up" element={ <Register onRegister={handleRegisterSubmit} /> } />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onCardClick={setSelectedCard}
+                  onCardLike={handleCardLike}
+                  onCardDelete={setDeletedCard}
+                  onConfirmationPopup={setIsPopupWithConfirmationOpen}
+                  element={Main}
+                  isLoggedIn={isLoggedIn}
+                />
+              }
+            />
+            <Route
+              path="/sign-in"
+              element={<Login onLogin={handleLoginSubmit} />}
+            />
+            <Route
+              path="/sign-up"
+              element={<Register onRegister={handleRegisterSubmit} />}
+            />
           </Routes>
           {isLoggedIn && <Footer />}
           <EditProfilePopup
