@@ -1,26 +1,17 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
+import useForm from "../hooks/useForm";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
-  const [title, setTitle] = React.useState("");
-  const [link, setLink] = React.useState("");
+  const { values, handleChange, setValues } = useForm({});
 
   React.useEffect(() => {
-    setTitle("");
-    setLink("");
+    setValues({});
   }, [isOpen]);
-
-  function handleTitleChange(evt) {
-    setTitle(evt.target.value);
-  }
-
-  function handleLinkChange(evt) {
-    setLink(evt.target.value);
-  }
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onAddPlace({ title, link });
+    onAddPlace(values);
   }
 
   return (
@@ -39,8 +30,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
         name="title"
         minLength={2}
         maxLength={30}
-        value={title}
-        onChange={handleTitleChange}
+        value={values.title || ""}
+        onChange={(evt) => {
+          handleChange(evt);
+        }}
         required
       />
       <span className="popup__input-error popup__input-error_type_title" />
@@ -49,8 +42,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
         placeholder="Ссылка на картинку"
         className="popup__input popup__input_type_link"
         name="link"
-        value={link}
-        onChange={handleLinkChange}
+        value={values.link || ""}
+        onChange={(evt) => {
+          handleChange(evt);
+        }}
         required
       />
       <span className="popup__input-error popup__input-error_type_link" />

@@ -1,20 +1,16 @@
 import React from "react";
+import useForm from "../hooks/useForm";
 
 function AuthForm({ title, button, onSubmit, ...props }) {
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const { values, handleChange, setValues } = useForm({});
 
-  function handleEmailChange(evt) {
-    setEmail(evt.target.value)
-  }
-
-  function handlePasswordChange(evt) {
-    setPassword(evt.target.value)
-  }
+  React.useEffect(() => {
+    setValues({});
+  }, []);
 
   function handleSubmit(evt) {
-    evt.preventDefault()
-    onSubmit(email, password)
+    evt.preventDefault();
+    onSubmit(values.email, values.password);
   }
 
   return (
@@ -26,9 +22,11 @@ function AuthForm({ title, button, onSubmit, ...props }) {
           id="email"
           name="email"
           placeholder="Email"
-          value={email || ''}
+          value={values.email || ""}
           className="auth__input auth__input_type_email"
-          onChange={handleEmailChange}
+          onChange={(evt) => {
+            handleChange(evt);
+          }}
           autoComplete="off"
           required
         />
@@ -37,16 +35,15 @@ function AuthForm({ title, button, onSubmit, ...props }) {
           id="password"
           name="password"
           placeholder="Пароль"
-          value={password || ''}
+          value={values.password || ""}
           className="auth__input auth__input_type_password"
-          onChange={handlePasswordChange}
+          onChange={(evt) => {
+            handleChange(evt);
+          }}
           autoComplete="off"
           required
         />
-        <button
-          type="submit"
-          className="auth__submit-button"
-        >
+        <button type="submit" className="auth__submit-button">
           {button}
         </button>
       </form>

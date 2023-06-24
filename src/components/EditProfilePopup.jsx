@@ -1,28 +1,22 @@
-import React from "react"
-import { CurrentUserContext } from "../contexts/CurrentUserContext"
-import PopupWithForm from "./PopupWithForm"
+import React from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import PopupWithForm from "./PopupWithForm";
+import useForm from "../hooks/useForm";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
-  const [name, setName] = React.useState('')
-  const [about, setAbout] = React.useState('')
-  const currentUser = React.useContext(CurrentUserContext)
+  const currentUser = React.useContext(CurrentUserContext);
+  const { values, handleChange, setValues } = useForm({});
 
   React.useEffect(() => {
-    setName(currentUser.name)
-    setAbout(currentUser.about)
-  }, [currentUser, isOpen])
-
-  function handleNameChange(evt) {
-    setName(evt.target.value)
-  }
-
-  function handleAboutChange(evt) {
-    setAbout(evt.target.value)
-  }
+    setValues({
+      name: currentUser.name,
+      about: currentUser.about,
+    });
+  }, [currentUser, isOpen]);
 
   function handleSubmit(evt) {
-    evt.preventDefault()
-    onUpdateUser({ name, about })
+    evt.preventDefault();
+    onUpdateUser(values);
   }
 
   return (
@@ -41,9 +35,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         name="name"
         minLength={2}
         maxLength={40}
-        required=""
-        value={name || ""}
-        onChange={handleNameChange}
+        value={values.name || ""}
+        onChange={(evt) => {
+          handleChange(evt);
+        }}
+        required
       />
       <span className="popup__input-error popup__input-error_type_name" />
       <input
@@ -53,13 +49,15 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         name="about"
         minLength={2}
         maxLength={200}
-        required=""
-        value={about || ""}
-        onChange={handleAboutChange}
+        value={values.about || ""}
+        onChange={(evt) => {
+          handleChange(evt);
+        }}
+        required
       />
       <span className="popup__input-error popup__input-error_type_about" />
     </PopupWithForm>
-  )
-};
+  );
+}
 
 export default EditProfilePopup;
