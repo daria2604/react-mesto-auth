@@ -5,14 +5,27 @@ import useForm from "../hooks/useForm";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
   const currentUser = React.useContext(CurrentUserContext);
-  const { values, handleChange, setValues } = useForm({});
+  const {
+    values,
+    errors,
+    handleChange,
+    setValues,
+    setIsValid,
+    setErrors,
+    isValid,
+  } = useForm({});
 
   React.useEffect(() => {
     setValues({
       name: currentUser.name,
       about: currentUser.about,
     });
+    setIsValid(true);
   }, [currentUser, isOpen]);
+
+  React.useEffect(() => {
+    setErrors({});
+  }, [onClose]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -27,11 +40,12 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isValid}
     >
       <input
         type="text"
         placeholder="Имя"
-        className="popup__input popup__input_type_name"
+        className={`popup__input ${errors?.name && "popup__input_type_error"}`}
         name="name"
         minLength={2}
         maxLength={40}
@@ -41,11 +55,17 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         }}
         required
       />
-      <span className="popup__input-error popup__input-error_type_name" />
+      <span
+        className={`popup__input-error ${
+          errors && "popup__input-error_active"
+        }`}
+      >
+        {errors?.name}
+      </span>
       <input
         type="text"
         placeholder="О себе"
-        className="popup__input popup__input_type_about"
+        className={`popup__input ${errors?.about && "popup__input_type_error"}`}
         name="about"
         minLength={2}
         maxLength={200}
@@ -55,7 +75,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         }}
         required
       />
-      <span className="popup__input-error popup__input-error_type_about" />
+      <span
+        className={`popup__input-error ${
+          errors && "popup__input-error_active"
+        }`}
+      >
+        {errors?.about}
+      </span>
     </PopupWithForm>
   );
 }
