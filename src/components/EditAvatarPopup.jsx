@@ -1,12 +1,20 @@
 import React from "react"
 import PopupWithForm from "./PopupWithForm";
+import useForm from "../hooks/useForm";
+import ErrorMessage from "./ErrorMessage";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading }) {
   const avatarRef = React.useRef()
+  const { errors, isValid, handleChange, setErrors, setIsValid } = useForm({})
 
   React.useEffect(() => {
     avatarRef.current.value = ''
   }, [isOpen])
+
+  React.useEffect(() => {
+    setErrors({})
+    setIsValid(false)
+  }, [onClose, setErrors])
 
   function handleSubmit(evt) {
     evt.preventDefault()
@@ -21,17 +29,19 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isValid}
     >
       <input
         type="url"
+        name="avatar"
         placeholder="Ссылка на картинку"
-        className="popup__input popup__input_type_avatar"
-        name="avatar-link"
+        className={`popup__input ${errors?.avatar && "popup__input_type_error"}`}
         defaultValue=""
-        required=""
         ref={avatarRef}
+        onChange={evt => {handleChange(evt)}}
+        required
       />
-      <span className="popup__input-error popup__input-error_type_avatar-link" />
+      <ErrorMessage errors={errors}>{errors?.avatar}</ErrorMessage>
     </PopupWithForm>
   )
 };
