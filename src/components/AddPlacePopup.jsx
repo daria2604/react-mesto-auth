@@ -1,13 +1,18 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 import useForm from "../hooks/useForm";
+import ErrorMessage from "./ErrorMessage";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
-  const { values, handleChange, setValues } = useForm({});
+  const { values, errors, handleChange, setValues, setErrors, isValid } = useForm({});
 
   React.useEffect(() => {
     setValues({});
-  }, [isOpen]);
+  }, [isOpen, setValues]);
+
+  React.useEffect(() => {
+    setErrors({});
+  }, [onClose, setErrors]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -22,11 +27,12 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isValid}
     >
       <input
         type="text"
         placeholder="Название"
-        className="popup__input popup__input_type_title"
+        className={`popup__input ${errors?.title && "popup__input_type_error"}`}
         name="title"
         minLength={2}
         maxLength={30}
@@ -36,11 +42,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
         }}
         required
       />
-      <span className="popup__input-error popup__input-error_type_title" />
+      <ErrorMessage errors={errors}>{errors?.title}</ErrorMessage>
       <input
         type="url"
         placeholder="Ссылка на картинку"
-        className="popup__input popup__input_type_link"
+        className={`popup__input ${errors?.link && "popup__input_type_error"}`}
         name="link"
         value={values.link || ""}
         onChange={(evt) => {
@@ -48,7 +54,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
         }}
         required
       />
-      <span className="popup__input-error popup__input-error_type_link" />
+      <ErrorMessage errors={errors}>{errors?.link}</ErrorMessage>
     </PopupWithForm>
   );
 }

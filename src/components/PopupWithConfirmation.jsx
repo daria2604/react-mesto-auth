@@ -1,7 +1,14 @@
 import React from "react"
 import PopupWithForm from "./PopupWithForm";
+import useForm from "../hooks/useForm";
 
 function PopupWithConfirmation({ card, isOpen, onClose, onConfirm  }) {
+  const { isValid, setIsValid } = useForm({})
+
+  React.useEffect(() => {
+    setIsValid(true)
+  }, [isOpen])
+
   function handleSubmit(evt) {
     evt.preventDefault()
     onConfirm(card)
@@ -15,6 +22,7 @@ function PopupWithConfirmation({ card, isOpen, onClose, onConfirm  }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      isFormValid={isValid}
     />
   )
 };

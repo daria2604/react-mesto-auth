@@ -2,6 +2,7 @@ import React from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 import useForm from "../hooks/useForm";
+import ErrorMessage from "./ErrorMessage";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
   const currentUser = React.useContext(CurrentUserContext);
@@ -21,11 +22,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
       about: currentUser.about,
     });
     setIsValid(true);
-  }, [currentUser, isOpen]);
+  }, [currentUser, isOpen, setIsValid, setValues]);
 
   React.useEffect(() => {
     setErrors({});
-  }, [onClose]);
+  }, [onClose, setErrors]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -55,13 +56,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         }}
         required
       />
-      <span
-        className={`popup__input-error ${
-          errors && "popup__input-error_active"
-        }`}
-      >
-        {errors?.name}
-      </span>
+      <ErrorMessage errors={errors}>{errors?.name}</ErrorMessage>
       <input
         type="text"
         placeholder="О себе"
@@ -75,13 +70,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
         }}
         required
       />
-      <span
-        className={`popup__input-error ${
-          errors && "popup__input-error_active"
-        }`}
-      >
-        {errors?.about}
-      </span>
+      <ErrorMessage errors={errors}>{errors?.about}</ErrorMessage>
     </PopupWithForm>
   );
 }
