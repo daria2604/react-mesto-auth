@@ -4,7 +4,7 @@ import useForm from "../hooks/useForm";
 import ErrorMessage from "./ErrorMessage";
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
-  const { values, errors, handleChange, setValues, setErrors, isValid } = useForm({});
+  const { values, errors, isValid, handleChange, setValues, setErrors, setIsValid } = useForm({});
 
   React.useEffect(() => {
     setValues({});
@@ -12,7 +12,8 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
 
   React.useEffect(() => {
     setErrors({});
-  }, [onClose, setErrors]);
+    setIsValid(false)
+  }, [onClose, setErrors, setIsValid]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
@@ -45,9 +46,9 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
       <ErrorMessage errors={errors}>{errors?.title}</ErrorMessage>
       <input
         type="url"
+        name="link"
         placeholder="Ссылка на картинку"
         className={`popup__input ${errors?.link && "popup__input_type_error"}`}
-        name="link"
         value={values.link || ""}
         onChange={(evt) => {
           handleChange(evt);
